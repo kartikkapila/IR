@@ -5,7 +5,6 @@ from urlparse import urljoin
 from bs4 import BeautifulSoup
 from sets import Set
 import time
-print "Starting" + "Program"
 
 start_time = time.time()
 ###### INITIALIZATION ######
@@ -17,6 +16,7 @@ seed = sys.argv[1]
 base_url = seed
 if len(sys.argv) > 2 :
 	keyPhrase = sys.argv[2]
+	keyPhrase = keyPhrase.lower()
 else :
 	keyPhrase = ""
 
@@ -29,11 +29,26 @@ def isValidUrl(url) :
 def findAbsolutePath(relative_path) :
 	return urljoin(base_url,relative_path)
 
+def checkRedirect(candidate) :
+	print candidate.getcode()
+	soup = BeautifulSoup(candidate.read())
+	links = soup.find_all('link')
+	for link in links:
+		if "canonical" == link.get('rel'):
+			print "canonical"
+		else :
+			print "nope"
+	return
+	
 def isKeyPhrasePresent(soup, absolute_path) :
 	if keyPhrase == "" :
 		return True
-	soup = BeautifulSoup(urllib2.urlopen(absolute_path).read())
-	text = soup.get_text()
+	candidate = urllib2.urlopen(absolute_path)
+	if absolute_path == "http://en.wikipedia.org/wiki/Computer_Science" : 
+		checkRedirect(candidate)
+#	checkRedirect(candidate)
+	soup = BeautifulSoup(candidate.read())
+	text = soup.get_text().lower()
 	if keyPhrase in text :
 		return True
 	return False
@@ -48,19 +63,16 @@ def findChildren(soup,depth) :
 	for anchor in soup.find_all('a') :
 		relative_path = anchor.get('href')	
 		if isValidUrl(relative_path) :
-			print "relative path:" + str(relative_path)
 			relative_path = removeHash(str(relative_path))
-			print "relative path:" + str(relative_path)
 			absolute_path = findAbsolutePath(relative_path)
 			candidate = (absolute_path,depth)
 			if depth <= 2 and absolute_path not in common_set and isKeyPhrasePresent(soup, absolute_path) :
 				frontier.append(candidate)
 				common_set.add(absolute_path)
 
-	
-
 while len(frontier) != 0 :
 	leaf_node = frontier.pop(0)	
+	print leaf_node[0]
 	if leaf_node[1] + 1 > 2:
 		explored_set.append(leaf_node[0])
 		break
