@@ -1,2 +1,2 @@
-IR
+Information Retrieval Projects
 ==
