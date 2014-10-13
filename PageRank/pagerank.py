@@ -15,8 +15,8 @@ d = 0.85
 d1 = 1 - d
 perplexity_list = []
 
-file = open("wt2g_inlinks.txt","r")
-#file = open("test1.txt","r")
+input_file = open("wt2g_inlinks.txt","r")
+#input_file = open("test1.txt","r")
 perplexity_output = open("perplexity.txt","w")
 
 def getPage(line) :
@@ -38,7 +38,7 @@ def hasNotConverged() :
 	perplexity_output.write("\n")
 	length_of_perplexity_list = len(perplexity_list)
 	if length_of_perplexity_list > 0 :
-		if perplexity_list[0] - perplexity < 1 :
+		if abs(perplexity_list[0] - perplexity) < 1 :
 			perplexity_list.append(perplexity)
 		else :
 			del  perplexity_list[:]
@@ -49,7 +49,7 @@ def hasNotConverged() :
 	return True
 
 def initialize() :
-	for line in file :
+	for line in input_file :
 		page = getPage(str(line))
 		P.add(page)
 		M[page] = Set()
@@ -73,6 +73,7 @@ while hasNotConverged() :
 	sinkPR = 0
 	for sink in Si :
 		sinkPR += PR[sink]
+	print sinkPR
 	for p in P :
 		newPR[p] = d1/N
 		newPR[p] += d*sinkPR/N
@@ -108,7 +109,7 @@ for p in sorted_list :
 	top50 += 1
 	if top50 > 50:
 		break
-file.close()
+input_file.close()
 perplexity_output.close()
 file_of_sorted_items.close()
 file_of_sorted_items_inLinks.close()
