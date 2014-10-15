@@ -23,7 +23,7 @@ def inLinkPagesInTop50(newLine) :
 	global noOfPagesInTop50Count
 	count = 0
 	for line in page_rank_file :
-		if count == 50000 :
+		if count == 50 :
 			break
 		page = line.split().pop(0)
 		if page in newLine :

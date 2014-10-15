@@ -2,6 +2,7 @@ from sets import Set
 from math import log
 import re
 import operator
+import sys
 
 P = Set()
 NP = Set()
@@ -15,8 +16,9 @@ d = 0.85
 d1 = 1 - d
 perplexity_list = []
 
-input_file = open("wt2g_inlinks.txt","r")
-#input_file = open("test1.txt","r")
+infile = sys.argv[1]
+
+input_file = open(infile,"r")
 perplexity_output = open("perplexity.txt","w")
 
 def getPage(line) :
@@ -38,13 +40,13 @@ def hasNotConverged() :
 	perplexity_output.write("\n")
 	length_of_perplexity_list = len(perplexity_list)
 	if length_of_perplexity_list > 0 :
-		if abs(perplexity_list[0] - perplexity) < 1 :
+		if abs(perplexity_list[length_of_perplexity_list - 1] - perplexity) < 1 :
 			perplexity_list.append(perplexity)
 		else :
 			del  perplexity_list[:]
 	else :
 		perplexity_list.append(perplexity)
-	if len(perplexity_list) == 4:
+	if len(perplexity_list) == 4 :
 		return False
 	return True
 
@@ -73,7 +75,6 @@ while hasNotConverged() :
 	sinkPR = 0
 	for sink in Si :
 		sinkPR += PR[sink]
-	print sinkPR
 	for p in P :
 		newPR[p] = d1/N
 		newPR[p] += d*sinkPR/N
@@ -82,11 +83,6 @@ while hasNotConverged() :
 	for p in P :
 		PR[p] = newPR[p]
 
-'''	count += 1
-for p in P :
-	print p + str(PR[p])
-'''
-
 file_of_sorted_items = open("sortedPageRank.txt","w")
 sorted_list = sorted(PR.items(), key=operator.itemgetter(1), reverse=True)
 top50 = 1
@@ -94,7 +90,7 @@ for p in sorted_list :
 	file_of_sorted_items.write(p[0] + " " + str(p[1]))
 	file_of_sorted_items.write("\n")
 	top50 += 1
-	if top50 > 50:
+	if top50 > 50 :
 		break
 
 for key, value in M.items() :
