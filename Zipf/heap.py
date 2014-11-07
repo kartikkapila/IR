@@ -1,4 +1,5 @@
 from sets import Set
+import math
 input_file = open("output.txt","r")
 input_list = []
 for word in input_file :
@@ -16,4 +17,40 @@ for word in input_list :
 	else :
 		output_file.write(str(words_processed) + " " + str(unique_words_count) + "\n")
 
-	
+
+output_file.close()
+input_file = open("total_words_vs_unique_words.txt","r")
+input_list = []
+x = []
+y = []
+x_avg = 0
+y_avg = 0
+sum_x = 0
+sum_y = 0
+sum_of_xi_square = 0
+sum_of_yi_square = 0
+sum_of_product_of_xi_yi = 0
+b = 0
+m = 0
+for word in input_file :
+	words = word.split(" ")
+	x.append(words.pop(0))
+	y.append(words.pop(0).split("\n").pop(0))
+
+n = len(x)
+for xi,yi in zip(x,y) :
+	log_xi = math.log(int(xi),10)
+	log_yi = math.log(int(yi),10)
+	sum_x += log_xi
+	sum_of_xi_square += log_xi * log_xi
+	sum_y += log_yi
+	sum_of_yi_square += log_yi * log_yi
+	sum_of_product_of_xi_yi += log_xi * log_yi
+x_avg = float(sum_x) / n 
+y_avg = float(sum_y) / n
+
+b = float((y_avg * sum_of_xi_square) - (x_avg * sum_of_product_of_xi_yi)) / (sum_of_xi_square - (n * x_avg * x_avg))
+m = float(sum_of_product_of_xi_yi - (n * x_avg * y_avg)) / (sum_of_xi_square - (n * x_avg * x_avg))
+
+print str(b)
+print str(m)

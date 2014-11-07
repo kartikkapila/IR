@@ -6,6 +6,7 @@ input_file = open("output.txt","r")
 input_list = []
 output_file = open("wordBasedOnCount.txt","w")
 all_words = open("alldata.txt","w")
+output_for_heaps_law = open("rank_vs_frequency.txt","w")
 wordAndCount = dict()
 
 for word in input_file :
@@ -22,14 +23,15 @@ len_of_unique_words = len(unique_words)
 
 for word in wordsSortedBasedonCount : 
 	probability = float("{0:.8f}".format(float(word[1])/len(input_list)))
-	if count <= 25 :
+	if count < 25 :
 		output_file.write(word[0] + "\t \t \t" + str(word[1]) + "\t" + str(rank) + "\t" + str(probability) + "\t \t" + str(rank * probability) +  "\n")
 		count += 1
-	elif count > 25 and count < 50  :
+	elif count >= 25 and count < 50  :
 		if word[0][:1] == 'm':
 			output_file.write(word[0] + "\t \t \t" + str(word[1]) + "\t" + str(rank) + "\t" + str(probability) + "\t \t" + str(rank * probability) + "\n")
 			count += 1
 	all_words.write(word[0] + "\t \t \t" + str(word[1]) + "\t" + str(rank) + "\t" + str(probability) + "\t \t" + str(rank * probability) + "\n")
+	output_for_heaps_law.write(str(rank) + " " + str(word[1]) +"\n")
 	if word[1] <= 4 :
 		words_with_count_below_4 += 1
 	rank += 1
@@ -37,3 +39,8 @@ for word in wordsSortedBasedonCount :
 output_file.write("Total number of words" + str(len(input_list)) + "\n")
 output_file.write("Total number of unique words" + str(len_of_unique_words))
 all_words.write("\n" + "Total Number of words with count < 4:" + str(words_with_count_below_4) + "\n")
+
+input_file.close()
+output_file.close()
+all_words.close()
+output_for_heaps_law.close()
