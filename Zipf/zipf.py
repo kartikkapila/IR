@@ -1,12 +1,16 @@
 from sets import Set
 import operator
 import time
+import math
 
 input_file = open("output.txt","r")
 input_list = []
 output_file = open("wordBasedOnCount.txt","w")
 all_words = open("alldata.txt","w")
-output_for_heaps_law = open("rank_vs_frequency.txt","w")
+output_log_rank = open("log_rank.txt","w")
+output_log_frequency = open("log_frequency.txt","w")
+output_rank = open("rank.txt","w")
+output_frequency = open("frequency.txt","w")
 wordAndCount = dict()
 
 for word in input_file :
@@ -31,7 +35,10 @@ for word in wordsSortedBasedonCount :
 			output_file.write(word[0] + "\t \t \t" + str(word[1]) + "\t" + str(rank) + "\t" + str(probability) + "\t \t" + str(rank * probability) + "\n")
 			count += 1
 	all_words.write(word[0] + "\t \t \t" + str(word[1]) + "\t" + str(rank) + "\t" + str(probability) + "\t \t" + str(rank * probability) + "\n")
-	output_for_heaps_law.write(str(rank) + " " + str(word[1]) +"\n")
+	output_log_rank.write(str(math.log(rank)) +"\n")
+	output_log_frequency.write(str(math.log(word[1])) +"\n")
+	output_rank.write(str(rank) + "\n")
+	output_frequency.write(str(word[1]) +"\n")
 	if word[1] <= 4 :
 		words_with_count_below_4 += 1
 	rank += 1
@@ -43,4 +50,3 @@ all_words.write("\n" + "Total Number of words with count < 4:" + str(words_with_
 input_file.close()
 output_file.close()
 all_words.close()
-output_for_heaps_law.close()
