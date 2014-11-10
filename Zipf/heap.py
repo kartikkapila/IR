@@ -22,6 +22,7 @@ output_file.close()
 input_file = open("total_words_vs_unique_words.txt","r")
 output_file_xi = open("log_xi.txt","w")
 output_file_yi = open("log_yi.txt","w")
+output_answer = open("answer.txt","w")
 input_list = []
 x = []
 y = []
@@ -55,7 +56,5 @@ x_avg = float(sum_x) / n
 y_avg = float(sum_y) / n
 b = float((y_avg * sum_of_xi_square) - (x_avg * sum_of_product_of_xi_yi)) / (sum_of_xi_square - (n * x_avg * x_avg))
 m = float(sum_of_product_of_xi_yi - (n * x_avg * y_avg)) / (sum_of_xi_square - (n * x_avg * x_avg))
-print str(b)
 k = math.exp(b)
-print str(k)
-print str(m)
+output_answer.write(str(k) + "\n" + str(m))
